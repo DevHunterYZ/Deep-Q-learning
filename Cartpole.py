@@ -9,19 +9,19 @@ env = gym.make('CartPole-v0')
 env.render()
 env.reset()
 
-#Hyperparameters
-H_SIZE = 10 #Number of hidden layer neurons
-batch_size = 5 #Update Params after every 5 episodes
-ETA = 1e-2 #Learning Rate
-GAMMA = 0.99 #Discount factor
+# Hyperparameters
+H_SIZE = 10 # Number of hidden layer neurons
+batch_size = 5 # Update Params after every 5 episodes
+ETA = 1e-2 # Learning Rate
+GAMMA = 0.99 # Discount factor
 
-INPUT_DIM = 4 #Input dimensions
+INPUT_DIM = 4 # Input dimensions
 
 
-#Initializing 
+# Initializing 
 tf.reset_default_graph()
 
-#Network to define moving left or right
+# Network to define moving left or right
 input = tf.placeholder(tf.float32, [None,INPUT_DIM] , name="input_x")
 W1 = tf.get_variable("W1", shape=[INPUT_DIM, H_SIZE],
            initializer=tf.contrib.layers.xavier_initializer())
@@ -31,13 +31,13 @@ W2 = tf.get_variable("W2", shape=[H_SIZE, 1],
 score = tf.matmul(layer1,W2)
 probability = tf.nn.sigmoid(score)
 
-#From here we define the parts of the network needed for learning a good policy.
+# From here we define the parts of the network needed for learning a good policy.
 tvars = tf.trainable_variables()
 input_y = tf.placeholder(tf.float32,[None,1], name="input_y")
 advantages = tf.placeholder(tf.float32,name="reward_signal")
 
 # The loss function. This sends the weights in the direction of making actions 
-# that gave good advantage (reward over time) more likely, and actions that didn't less likely.
+# That gave good advantage (reward over time) more likely, and actions that didn't less likely.
 loglik = tf.log(input_y*(input_y - probability) + (1 - input_y)*(input_y + probability))
 loss = -tf.reduce_mean(loglik * advantages) 
 newGrads = tf.gradients(loss,tvars)
@@ -58,11 +58,11 @@ def discount_rewards(r):
         discounted_r[t] = running_add
     return discounted_r
 
-xs,hs,drs,ys = [],[],[],[]	#Arrays to store parameters till an update happens
+xs,hs,drs,ys = [],[],[],[]	# Arrays to store parameters till an update happens
 running_reward = None
 reward_sum = 0
 episode_number = 1
-total_episodes = 10000
+total_episodes = 1000
 init = tf.initialize_all_variables()
 
 # Training
