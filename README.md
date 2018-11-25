@@ -1,2 +1,2 @@
 # Deep-Q-learning
-Deep reinforcement learning
+My deep-RL experiences with OpenAI Gym and Chainer modules.
